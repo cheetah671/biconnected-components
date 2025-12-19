@@ -1,0 +1,230 @@
+GRAPH GENERATION UTILITIES
+==========================
+Generated on: December 2, 2025
+
+This document lists all graph generation and visualization utilities in the AAD_CP project.
+
+
+CORE GRAPH UTILITIES
+--------------------
+
+1. graph_utils.py
+   Location: /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/graph_utils.py
+   Description: Core module providing graph reading, processing, and utility functions
+   
+   Key Functions:
+   - read_graph(filename) -> Reads graph from dataset files, returns (vertices, edges, description)
+   - build_adjacency_list(n, edges) -> Converts edge list to adjacency list representation
+   - build_edge_list(n, edges) -> Creates normalized set of edges with (min, max) ordering
+   - get_graph_properties(n, edges) -> Computes basic graph properties (vertices, edges, density)
+   
+   Features:
+   - Handles comment lines in graph files (lines starting with #)
+   - Supports various graph representations
+   - Provides graph property analysis
+   - 287 lines of utility code
+
+
+DATASET GENERATION
+------------------
+
+2. generate_dataset.py
+   Location: /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/generate_dataset.py
+   Description: Comprehensive dataset generator for biconnected components testing
+   
+   Graph Types Generated:
+   - Sparse graphs (edge ratio ~1.5 to 2.5 times vertices)
+   - Dense graphs (edge ratio > 0.5 * n * (n-1) / 2)
+   - Small graphs (for quick testing)
+   - Large graphs (for performance benchmarking)
+   - Tree-like graphs (with articulation points)
+   - Highly connected graphs (with redundant paths)
+   
+   Key Functions:
+   - ensure_dir(directory) -> Creates output directories
+   - write_graph(filename, vertices, edges, description) -> Writes graphs in edge list format
+   - generate_sparse_graphs(output_dir) -> Creates 10 sparse graph test cases
+   - generate_dense_graphs(output_dir) -> Creates 10 dense graph test cases
+   - Generates graphs with specific properties for algorithm testing
+   
+   Output Format:
+   # Description
+   num_vertices num_edges
+   u1 v1
+   u2 v2
+   ...
+   
+   Features:
+   - 523 lines of generation code
+   - Ensures connectivity via spanning trees
+   - Creates diverse test cases with varying properties
+
+
+GRAPH VISUALIZATION
+-------------------
+
+3. visualize_graph.py
+   Location: /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/visualize_graph.py
+   Description: Generates visualization for individual graph files
+   
+   Usage: python3 visualize_graph.py <path_to_graph_file>
+   
+   Key Functions:
+   - read_graph_from_file(filepath) -> Reads graph file and creates NetworkX graph object
+   - visualize_graph(filepath, output_dir) -> Creates visual representation of graph
+   
+   Features:
+   - Uses NetworkX for graph representation
+   - Uses matplotlib for rendering (Agg backend for non-interactive)
+   - Handles comment lines in input files
+   - Skips invalid edges gracefully
+   - 153 lines of visualization code
+   - Outputs PNG images of graph structures
+
+
+4. visualize_all.py
+   Location: /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/visualize_all.py
+   Description: Batch visualization script for entire dataset
+   
+   Usage: python3 visualize_all.py
+   
+   Functionality:
+   - Scans all categories in dataset directory
+   - Processes all .txt files in each category
+   - Organizes output by category
+   - Provides progress feedback and error reporting
+   
+   Output Structure:
+   graphs/
+     ├── sparse/
+     ├── dense/
+     ├── small/
+     ├── large/
+     ├── tree_like/
+     ├── highly_connected/
+     └── real_world/
+   
+   Features:
+   - Batch processing of entire dataset
+   - Error handling for problematic files
+   - Success/failure statistics
+   - Organized output directory structure
+
+
+PERFORMANCE VISUALIZATION
+--------------------------
+
+5. create_performance_graphs.py
+   Location: /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/create_performance_graphs.py
+   Description: Generates performance comparison graphs across all algorithms
+   
+   Key Functions:
+   - load_all_results() -> Loads and combines results from all algorithm CSV files
+   - create_category_comparison_graphs(df) -> Creates comparison graphs per category
+   - create_overall_comparison(df) -> Creates overall performance comparison
+   
+   Algorithm Metadata:
+   - p1: Tarjan's Algorithm (Blue #1f77b4)
+   - p2: Tarjan-Vishkin (Orange #ff7f0e)
+   - p3: Slota-Madduri Parallel (Purple #9467bd)
+   - p4: Naive Algorithm (Red #d62728)
+   - p5: Chain Decomposition (Green #2ca02c)
+   
+   Features:
+   - 549 lines of analysis code
+   - Uses pandas for data processing
+   - Creates bar charts with error bars (standard deviation)
+   - Adds value labels on bars
+   - Color-coded by algorithm
+   - Generates category-specific and overall comparisons
+   - Filters successful runs (exitcode == 0)
+
+
+6. create_all_performance_graphs.py
+   Location: /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/create_all_performance_graphs.py
+   Description: Wrapper script to generate performance graphs for all algorithms
+   
+   Usage: python3 create_all_performance_graphs.py
+   
+   Functionality:
+   - Imports create_performance_graphs module
+   - Runs graph generation for p1, p2, p4, p5 algorithms
+   - Provides comprehensive performance visualization
+   
+   Features:
+   - Batch processing for all algorithm results
+   - Automated graph generation pipeline
+   - Success/failure reporting
+
+
+7. create_memory_cache_graphs.py
+   Location: /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/create_memory_cache_graphs.py
+   Description: Creates memory and cache analysis graphs
+   
+   Features:
+   - Visualizes memory usage patterns
+   - Analyzes cache performance
+   - Creates comparative visualizations
+
+
+DEPENDENCIES
+------------
+
+Required Python Libraries:
+- networkx: For graph data structures and algorithms
+- matplotlib: For plotting and visualization
+- pandas: For data analysis and processing
+- numpy: For numerical operations
+
+System Tools:
+- Python 3.x
+- pip (for package management)
+
+
+WORKFLOW OVERVIEW
+-----------------
+
+1. Dataset Generation:
+   generate_dataset.py → Creates diverse test graphs → Saves to dataset/
+
+2. Graph Visualization:
+   visualize_all.py → Reads all dataset files → Creates visual representations → Saves to graphs/
+
+3. Algorithm Execution:
+   run_p1_only.py, run_p2_only.py, etc. → Execute algorithms → Save results to outputs/
+
+4. Performance Analysis:
+   create_performance_graphs.py → Analyzes results CSVs → Generates comparison charts → Saves to graphs/
+
+5. Memory/Cache Analysis:
+   create_memory_cache_graphs.py → Analyzes cachegrind data → Creates memory visualizations
+
+
+OUTPUT DIRECTORIES
+------------------
+
+dataset/          - Generated test graphs organized by category
+graphs/           - Visual representations and performance charts
+outputs/          - Algorithm execution results (CSV format)
+codes/            - Compiled executables
+
+
+SUMMARY
+-------
+
+Total Graph Utilities: 7 files
+- Core utilities: 1 (graph_utils.py)
+- Dataset generation: 1 (generate_dataset.py)
+- Graph visualization: 2 (visualize_graph.py, visualize_all.py)
+- Performance visualization: 3 (create_performance_graphs.py, create_all_performance_graphs.py, create_memory_cache_graphs.py)
+
+Key Features:
+- Comprehensive graph generation with 6 different categories
+- Flexible graph reading and processing utilities
+- Batch and individual visualization capabilities
+- Performance analysis across multiple algorithms
+- Memory and cache analysis visualization
+- Organized output structure for easy analysis
+
+NOTE: These utilities form the backbone of the graph testing and analysis pipeline,
+enabling comprehensive evaluation of biconnected components algorithms.

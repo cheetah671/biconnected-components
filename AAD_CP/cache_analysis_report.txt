@@ -1,0 +1,151 @@
+======================================================================
+Hardware Performance Analysis Report
+======================================================================
+Date: 2025-12-01 23:28:42
+
+Test Graph: graphs/dense/dense_08.txt (16 vertices, 81 edges)
+
+Metrics Collected:
+  Ir:   Instructions executed
+  I1mr: L1 Instruction cache misses
+  ILmr: Last Level Instruction cache misses
+  Dr:   Data reads
+  D1mr: L1 Data cache read misses
+  DLmr: Last Level Data cache read misses
+  Dw:   Data writes
+  D1mw: L1 Data cache write misses
+  DLmw: Last Level Data cache write misses
+  Bc:   Conditional branches executed
+  Bcm:  Conditional branch mispredictions
+
+======================================================================
+Algorithm: p1 (Tarjan's Algorithm)
+======================================================================
+Instructions (Ir):                                      23,090,194
+L1 I-Cache Misses (I1mr):                                   37,245
+LL I-Cache Misses (ILmr):                                    2,890
+Data Reads (Dr):                                         7,415,395
+L1 D-Cache Read Misses (D1mr):                              20,761
+LL D-Cache Read Misses (DLmr):                               7,690
+Data Writes (Dw):                                        4,946,369
+L1 D-Cache Write Misses (D1mw):                              7,071
+LL D-Cache Write Misses (DLmw):                              5,000
+Conditional Branches (Bc):                               1,678,896
+Branch Mispredicts (Bcm):                                   64,650
+
+L1 I-Cache Miss Rate:                                      0.1613%
+L1 D-Cache Read Miss Rate:                                 0.2800%
+L1 D-Cache Write Miss Rate:                                0.1430%
+Branch Mispredict Rate:                                    3.8507%
+
+======================================================================
+Algorithm: p2 (Tarjan-Vishkin)
+======================================================================
+Instructions (Ir):                                      35,320,309
+L1 I-Cache Misses (I1mr):                                    2,882
+LL I-Cache Misses (ILmr):                                    2,601
+Data Reads (Dr):                                        11,336,829
+L1 D-Cache Read Misses (D1mr):                              42,180
+LL D-Cache Read Misses (DLmr):                               7,727
+Data Writes (Dw):                                        2,383,699
+L1 D-Cache Write Misses (D1mw):                              9,038
+LL D-Cache Write Misses (DLmw):                              6,997
+Conditional Branches (Bc):                               8,917,335
+Branch Mispredicts (Bcm):                                  120,577
+
+L1 I-Cache Miss Rate:                                      0.0082%
+L1 D-Cache Read Miss Rate:                                 0.3721%
+L1 D-Cache Write Miss Rate:                                0.3792%
+Branch Mispredict Rate:                                    1.3522%
+
+======================================================================
+Algorithm: p3 (Slota-Madduri Parallel)
+======================================================================
+Instructions (Ir):                                       2,511,641
+L1 I-Cache Misses (I1mr):                                    2,899
+LL I-Cache Misses (ILmr):                                    2,797
+Data Reads (Dr):                                           686,222
+L1 D-Cache Read Misses (D1mr):                              15,036
+LL D-Cache Read Misses (DLmr):                               8,054
+Data Writes (Dw):                                          263,877
+L1 D-Cache Write Misses (D1mw):                              2,539
+LL D-Cache Write Misses (DLmw):                              1,616
+Conditional Branches (Bc):                                 372,509
+Branch Mispredicts (Bcm):                                   18,294
+
+L1 I-Cache Miss Rate:                                      0.1154%
+L1 D-Cache Read Miss Rate:                                 2.1911%
+L1 D-Cache Write Miss Rate:                                0.9622%
+Branch Mispredict Rate:                                    4.9110%
+
+======================================================================
+Algorithm: p4 (Naive Algorithm)
+======================================================================
+Instructions (Ir):                                     112,667,491
+L1 I-Cache Misses (I1mr):                                    2,337
+LL I-Cache Misses (ILmr):                                    2,288
+Data Reads (Dr):                                        17,188,236
+L1 D-Cache Read Misses (D1mr):                           1,414,469
+LL D-Cache Read Misses (DLmr):                               7,705
+Data Writes (Dw):                                        8,732,690
+L1 D-Cache Write Misses (D1mw):                             28,853
+LL D-Cache Write Misses (DLmw):                              2,549
+Conditional Branches (Bc):                              17,213,794
+Branch Mispredicts (Bcm):                                2,111,680
+
+L1 I-Cache Miss Rate:                                      0.0021%
+L1 D-Cache Read Miss Rate:                                 8.2293%
+L1 D-Cache Write Miss Rate:                                0.3304%
+Branch Mispredict Rate:                                   12.2674%
+
+======================================================================
+Algorithm: p5 (Chain Decomposition)
+======================================================================
+Instructions (Ir):                                      14,188,618
+L1 I-Cache Misses (I1mr):                                    2,609
+LL I-Cache Misses (ILmr):                                    2,400
+Data Reads (Dr):                                         3,915,946
+L1 D-Cache Read Misses (D1mr):                              62,229
+LL D-Cache Read Misses (DLmr):                               7,712
+Data Writes (Dw):                                        2,284,672
+L1 D-Cache Write Misses (D1mw):                             45,026
+LL D-Cache Write Misses (DLmw):                             43,403
+Conditional Branches (Bc):                               1,890,479
+Branch Mispredicts (Bcm):                                   57,544
+
+L1 I-Cache Miss Rate:                                      0.0184%
+L1 D-Cache Read Miss Rate:                                 1.5891%
+L1 D-Cache Write Miss Rate:                                1.9708%
+Branch Mispredict Rate:                                    3.0439%
+
+======================================================================
+Comparative Summary
+======================================================================
+
+Instruction Count Ranking (Lower is Better):
+1. p3 (Slota-Madduri Parallel)               2,511,641 instructions
+2. p5 (Chain Decomposition)                 14,188,618 instructions (5.65x)
+3. p1 (Tarjan's Algorithm)                  23,090,194 instructions (9.19x)
+4. p2 (Tarjan-Vishkin)                      35,320,309 instructions (14.06x)
+5. p4 (Naive Algorithm)                    112,667,491 instructions (44.86x)
+
+Branch Misprediction Count:
+  p3 (Slota-Madduri Parallel)               18,294 (4.91%)
+  p5 (Chain Decomposition)                  57,544 (3.04%)
+  p1 (Tarjan's Algorithm)                   64,650 (3.85%)
+  p2 (Tarjan-Vishkin)                      120,577 (1.35%)
+  p4 (Naive Algorithm)                   2,111,680 (12.27%)
+
+Cache Performance Summary:
+  p3 (Slota-Madduri Parallel)               20,474 total L1 misses
+  p2 (Tarjan-Vishkin)                       54,100 total L1 misses
+  p1 (Tarjan's Algorithm)                   65,077 total L1 misses
+  p5 (Chain Decomposition)                 109,864 total L1 misses
+  p4 (Naive Algorithm)                   1,445,659 total L1 misses
+
+Key Insights:
+  • p3 (Slota-Madduri Parallel) is the most efficient (lowest instruction count)
+  • p4 (Naive Algorithm) executes 44.9x more instructions
+  • Cache locality and branch prediction insights shown when data available.
+  • p2 (Tarjan-Vishkin) has best branch prediction (1.35% mispredict)
+  • p4 (Naive Algorithm) has most branch mispredicts (12.27%)

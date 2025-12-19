@@ -1,0 +1,82 @@
+BENCHMARKING FILES LIST
+=======================
+Generated on: December 1, 2025
+
+This document lists all benchmarking and performance analysis files in the AAD_CP project.
+
+PERFORMANCE METRICS FILES
+-------------------------
+1. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/perf_p1.txt
+   - Performance metrics for Algorithm P1
+
+2. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/perf_p2.txt
+   - Performance metrics for Algorithm P2
+
+3. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/perf_p4.txt
+   - Performance metrics for Algorithm P4
+
+4. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/perf_p5.txt
+   - Performance metrics for Algorithm P5
+
+5. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/performance_metrics.txt
+   - Consolidated performance metrics for all algorithms
+
+
+CACHE ANALYSIS FILES
+--------------------
+6. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/cache_analysis_report.txt
+   - Cache analysis report (main directory)
+
+7. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/cache_analysis_report.txt
+   - Cache analysis report (scripts directory)
+
+
+BENCHMARKING SCRIPTS
+--------------------
+8. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/run_cachegrind_analysis.sh
+   - Shell script to run Valgrind Cachegrind analysis on all algorithms
+
+9. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/create_performance_graphs.py
+   - Python script to create performance graphs for individual algorithms
+
+10. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/create_all_performance_graphs.py
+    - Python script to generate performance graphs for all algorithms (p1, p2, p4, p5)
+
+11. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/create_memory_cache_graphs.py
+    - Python script to create memory and cache analysis graphs
+
+12. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/parse_cachegrind.py
+    - Python script to parse Cachegrind output files
+
+13. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/scripts/run_all.py
+    - Python script to run all algorithms with benchmarking
+
+
+ALGORITHM EXECUTION SCRIPTS
+----------------------------
+14. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/run_p1_only.py
+    - Script to run and benchmark Algorithm P1
+
+15. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/run_p2_only.py
+    - Script to run and benchmark Algorithm P2
+
+16. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/run_p3_only.py
+    - Script to run and benchmark Algorithm P3
+
+17. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/run_p4_only.py
+    - Script to run and benchmark Algorithm P4
+
+18. /home/arnav-agnihotri/Downloads/aad_last/AAD_PROJECT_Alliance/AAD_CP/run_p5_only.py
+    - Script to run and benchmark Algorithm P5
+
+
+SUMMARY
+-------
+Total benchmarking files: 18
+- Performance metrics files: 5
+- Cache analysis files: 2
+- Benchmarking scripts: 6
+- Algorithm execution scripts: 5
+
+NOTE: These files are used for analyzing the performance, cache behavior, and 
+efficiency of different graph algorithms implemented in the AAD_CP project.

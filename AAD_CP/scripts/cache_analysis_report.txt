@@ -1,0 +1,4 @@
+No cachegrind results were found or all parse attempts failed.
+Please ensure the files 'cachegrind_p1.out', 'cachegrind_p2.out',
+'cachegrind_p4.out', 'cachegrind_p5.out' exist and are readable by cg_annotate.
+You can (re)generate them using the run_cachegrind_analysis.sh script.

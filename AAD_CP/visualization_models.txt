@@ -1,0 +1,474 @@
+VISUALIZATION MODELS
+====================
+Generated on: December 2, 2025
+
+This document describes all visualization models and plotting techniques used in the AAD_CP project.
+
+
+OVERVIEW
+--------
+The project uses multiple visualization approaches to represent:
+1. Graph structures (nodes, edges, articulation points, bridges)
+2. Performance metrics (execution time, memory usage)
+3. Cache behavior (L1/L2 cache misses, branch predictions)
+4. Statistical distributions (degree distributions, histograms)
+5. Comparative analysis (bar charts, scatter plots, grouped comparisons)
+
+
+VISUALIZATION LIBRARIES
+-----------------------
+
+Primary Libraries:
+- matplotlib (v3.x): Core plotting library for all visualizations
+  - Backend: 'Agg' (non-interactive, file output)
+  - Used for: Bar charts, scatter plots, histograms, line graphs
+  
+- NetworkX (v2.x+): Graph structure visualization
+  - Used for: Graph layout algorithms, node/edge rendering
+  - Layout engines: spring_layout (force-directed)
+  
+- Pandas (v1.x+): Data processing for graphs
+  - Used for: CSV data aggregation, statistics computation
+  
+- NumPy (v1.x+): Numerical computations
+  - Used for: Array operations, statistical calculations
+
+
+VISUALIZATION MODEL 1: GRAPH STRUCTURE VISUALIZATION
+-----------------------------------------------------
+
+File: visualize_graph.py
+Purpose: Visualize graph topology with articulation points and bridges highlighted
+
+Model Components:
+
+1. Node Visualization
+   - Standard nodes: Light blue color (skyblue/lightblue)
+   - Articulation points: Red color (critical nodes)
+   - Size: Adaptive based on graph size
+     * Small graphs (≤50 nodes): 300 pixels
+     * Medium graphs (≤200 nodes): 100 pixels
+     * Large graphs (>200 nodes): 50 pixels
+   
+2. Edge Visualization
+   - Regular edges: Gray/black, alpha=0.5, width=1
+   - Bridge edges: Red color, width=2 (critical edges)
+   
+3. Layout Algorithm
+   - Algorithm: Force-directed spring layout (nx.spring_layout)
+   - Parameters:
+     * seed=42 (reproducibility)
+     * k: spacing constant (1.0 for small, 0.5 for medium, 0.3 for large)
+     * iterations: 50 for small, 30 for medium, 20 for large
+   
+4. Adaptive Rendering
+   - Small graphs (n ≤ 100): Full labels, detailed view
+   - Medium graphs (100 < n ≤ 1000): No labels, optimized layout
+   - Large graphs (n > 1000): Degree distribution histogram instead
+   
+5. Degree Distribution (Large Graphs)
+   - Chart type: Histogram
+   - Bins: 50
+   - Displays: Degree frequency distribution
+   - Avoids: Memory/rendering issues with massive graphs
+   
+Output:
+- Format: PNG
+- Resolution: 150 DPI
+- Size: 12x10 inches (standard), 8x6 inches (distributions)
+- Naming: {filename}_visualization.png or {filename}_degree_dist.png
+
+
+VISUALIZATION MODEL 2: PERFORMANCE COMPARISON CHARTS
+-----------------------------------------------------
+
+File: create_performance_graphs.py
+Purpose: Compare algorithm performance across categories and graph sizes
+
+Model Components:
+
+1. Category Comparison (Bar Chart)
+   - Chart type: Grouped bar chart with error bars
+   - X-axis: Graph categories (sparse, dense, small, large, etc.)
+   - Y-axis: Average execution time (seconds)
+   - Error bars: Standard deviation (capsize=5)
+   - Colors: Algorithm-specific (defined in ALGO_COLORS)
+     * p1 (Tarjan): Blue (#1f77b4)
+     * p2 (Tarjan-Vishkin): Orange (#ff7f0e)
+     * p3 (Slota-Madduri): Purple (#9467bd)
+     * p4 (Naive): Red (#d62728)
+     * p5 (Chain Decomposition): Green (#2ca02c)
+   - Bar properties: alpha=0.7, edgecolor='black', linewidth=1.5
+   - Value labels: Displayed on top of bars, format: {value:.4f}s
+   
+2. Overall Comparison (Grouped Bar Chart)
+   - Chart type: Multi-algorithm grouped bar chart
+   - Layout: Side-by-side bars per category
+   - Width: 0.8 / num_algorithms (adaptive spacing)
+   - Offset: Centered around category position
+   - Features: Grid overlay (alpha=0.3, dashed)
+   
+3. Time vs Size (Scatter Plot)
+   - Chart type: Log-log scatter plot
+   - X-axis: Number of vertices (log scale)
+   - Y-axis: Execution time in seconds (log scale)
+   - Points: size=50, alpha=0.6, edgecolor='black'
+   - Overlay: All algorithms on same plot for comparison
+   - Grid: Both major and minor grid lines
+   
+4. Statistical Table
+   - Format: ASCII table printed to console
+   - Columns: Category + one column per algorithm
+   - Rows: One per category + overall statistics
+   - Metrics: Mean, Median, Standard Deviation
+   - Precision: 6 decimal places
+   
+Output:
+- Format: PNG
+- Resolution: 150 DPI
+- Sizes:
+  * Category comparison: 10x6 inches
+  * Overall comparison: 14x7 inches
+  * Time vs size: 12x7 inches
+- Naming: comparison_{category}.png, comparison_overall.png, comparison_time_vs_size.png
+
+
+VISUALIZATION MODEL 3: MEMORY USAGE ANALYSIS
+---------------------------------------------
+
+File: create_memory_cache_graphs.py
+Purpose: Analyze and visualize memory consumption patterns
+
+Model Components:
+
+1. Memory Usage Bar Chart
+   - Chart type: Bar chart with error bars
+   - X-axis: Algorithms
+   - Y-axis: Memory usage (MB)
+   - Data source: performance_metrics.txt (parsed from /usr/bin/time output)
+   - Metric: Maximum resident set size (converted from KB to MB)
+   - Aggregation: Mean and standard deviation per algorithm
+   - Value labels: Format {value:.2f} MB
+   
+2. Category-Specific Memory Charts
+   - Separate charts for each graph category
+   - Filters: Only successful runs (exitcode == 0)
+   - Sorting: Algorithms sorted by mean memory usage
+   
+3. Data Parsing Model
+   - Input: performance_metrics.txt
+   - Pattern matching: Regex for "Maximum resident set size (kbytes): (\d+)"
+   - Section parsing: Split by "Algorithm: (p\d)" and "Test: (\w+)"
+   - Conversion: KB → MB (divide by 1024.0)
+   
+Output:
+- Format: PNG
+- Resolution: 150 DPI
+- Size: 10x6 inches
+- Naming: memory_{category}.png
+
+
+VISUALIZATION MODEL 4: CACHE PERFORMANCE GRAPHS
+------------------------------------------------
+
+File: create_memory_cache_graphs.py (cache functions)
+Purpose: Visualize cache hit/miss rates and branch prediction
+
+Model Components:
+
+1. Cache Metrics Extraction
+   - Data source: cachegrind_*.out files (Valgrind output)
+   - Tool: cg_annotate (subprocess call)
+   - Metrics extracted:
+     * Total instructions executed
+     * L1 instruction cache misses
+     * L1 data cache misses
+     * L1 total misses (I + D)
+     * Branch instructions
+     * Branch mispredictions
+   
+2. L1 Cache Miss Comparison
+   - Chart type: Bar chart
+   - Y-axis: Total L1 cache misses (I + D)
+   - Comparison: Across all algorithms
+   - Purpose: Identify memory access patterns
+   
+3. Branch Misprediction Analysis
+   - Chart type: Bar chart
+   - Y-axis: Number of branch mispredictions
+   - Purpose: Analyze control flow efficiency
+   
+4. Cache Miss Rate Calculation
+   - Formula: (misses / instructions) * 100
+   - Display: Percentage with 2 decimal places
+   
+Output:
+- Format: PNG
+- Resolution: 150 DPI
+- Size: 10x6 inches
+- Naming: cache_l1_misses.png, cache_branch_mispredicts.png
+
+
+VISUALIZATION MODEL 5: DEGREE DISTRIBUTION HISTOGRAM
+-----------------------------------------------------
+
+File: run_all.py, visualize_graph.py
+Purpose: Show degree distribution for large graphs
+
+Model Components:
+
+1. Histogram Configuration
+   - Chart type: Frequency histogram
+   - X-axis: Node degree
+   - Y-axis: Count (number of nodes with that degree)
+   - Bins: 50 (adaptive binning)
+   - Edge color: Black (for clarity)
+   
+2. Use Case
+   - Triggered for: Graphs with > 1000 or > 2000 nodes
+   - Rationale: Full graph visualization is computationally expensive
+   - Alternative: Statistical summary instead of full rendering
+   
+3. Statistics Displayed
+   - Graph name
+   - Number of vertices (n)
+   - Number of edges (m)
+   - Degree distribution shape
+   
+Output:
+- Format: PNG
+- Resolution: 150 DPI
+- Size: 6x4 inches (compact) or 8x6 inches
+- Naming: {basename}_degree_hist.png or {basename}_degree_dist.png
+
+
+VISUALIZATION MODEL 6: ARTICULATION & BRIDGE HIGHLIGHTING
+----------------------------------------------------------
+
+Files: visualize_graph.py, run_all.py
+Purpose: Identify and highlight critical graph components
+
+Model Components:
+
+1. Critical Component Detection
+   - Articulation points: nx.articulation_points(G)
+     * Definition: Nodes whose removal disconnects the graph
+     * Visual: Red nodes
+   
+   - Bridges: nx.bridges(G)
+     * Definition: Edges whose removal disconnects the graph
+     * Visual: Red edges (thicker, width=2.0)
+   
+2. Dual Rendering Strategy
+   - Background layer: Regular nodes (lightblue/skyblue)
+   - Foreground layer: Critical nodes (red)
+   - Regular edges: Semi-transparent (alpha=0.5-0.6)
+   - Bridge edges: Opaque red (alpha=1.0)
+   
+3. Legend Information
+   - Title format: "{basename} (n={nodes}, m={edges})"
+   - Subtitle: "red=articulation points / bridges"
+   - Metrics: Count of articulation points and bridges
+   
+4. NetworkX Integration
+   - Node drawing: nx.draw_networkx_nodes()
+   - Edge drawing: nx.draw_networkx_edges() (separate calls for regular/bridges)
+   - Label drawing: nx.draw_networkx_labels() (conditional based on size)
+
+
+COLOR SCHEME & DESIGN PRINCIPLES
+---------------------------------
+
+Algorithm Color Palette:
+- Consistent across all charts for recognition
+- High contrast for accessibility
+- Distinct hues to avoid confusion
+
+p1 (Tarjan):            Blue    #1f77b4  □
+p2 (Tarjan-Vishkin):    Orange  #ff7f0e  □
+p3 (Slota-Madduri):     Purple  #9467bd  □
+p4 (Naive):             Red     #d62728  □
+p5 (Chain Decomposition): Green #2ca02c  □
+
+Graph Element Colors:
+- Standard nodes:        Light blue (skyblue, lightblue)
+- Articulation points:   Red
+- Regular edges:         Gray/black, semi-transparent
+- Bridge edges:          Red, opaque
+
+Design Principles:
+1. Consistency: Same colors represent same algorithms across all charts
+2. Clarity: High contrast between elements
+3. Accessibility: Colorblind-friendly palette (use shapes/patterns too)
+4. Information density: Labels only when readable
+5. Professional: Clean lines, grid overlays, proper fonts
+
+
+CHART FORMATTING STANDARDS
+---------------------------
+
+Common Settings:
+- Font size (titles): 14-15pt, bold
+- Font size (axes): 12-13pt, bold
+- Font size (labels): 8-10pt
+- Font size (legends): 11pt
+- Grid: alpha=0.3, linestyle='--', axis='y' (or 'both')
+- Tight layout: Always enabled for optimal spacing
+- DPI: 150 (high quality for publications)
+- bbox_inches: 'tight' (no whitespace)
+
+Title Format:
+- Primary title: Bold, 14-15pt
+- Subtitle info: Metrics, counts
+- Padding: pad=20 for main titles
+
+Axis Labels:
+- X-axis: Descriptive, units in parentheses if applicable
+- Y-axis: Descriptive, units in parentheses
+- Rotation: 15-30 degrees for crowded labels, ha='right'
+
+Legends:
+- Position: 'upper left' (default) or best position
+- Frame alpha: 0.95 (semi-transparent background)
+- Font size: 11pt
+- Border: Default matplotlib border
+
+
+OUTPUT ORGANIZATION
+-------------------
+
+Directory Structure:
+graphs/
+  ├── comparison_{category}.png         # Per-category performance
+  ├── comparison_overall.png            # All algorithms, all categories
+  ├── comparison_time_vs_size.png       # Scaling analysis
+  ├── memory_{category}.png             # Memory usage by category
+  ├── cache_l1_misses.png              # Cache miss comparison
+  ├── cache_branch_mispredicts.png     # Branch prediction analysis
+  ├── {category}/                       # Category-specific graph visualizations
+  │   ├── {graph_name}_visualization.png
+  │   └── {graph_name}_degree_dist.png
+  └── ...
+
+File Naming Conventions:
+- Lowercase with underscores
+- Descriptive names
+- Category prefix where applicable
+- Extension: .png (universal compatibility)
+
+
+STATISTICAL METHODS
+-------------------
+
+Aggregation Functions (Pandas):
+- Mean: Primary measure of central tendency
+- Median: Robust to outliers
+- Standard Deviation: Error bars on charts
+- Count: Sample size verification
+
+Filtering:
+- exitcode == 0: Only successful algorithm runs
+- Valid data: Non-zero values, proper parsing
+
+Sorting:
+- By mean value: For ranked visualizations
+- By category name: For consistent ordering
+- Alphabetical: For algorithm consistency
+
+
+DATA SOURCES
+------------
+
+1. CSV Results Files
+   - Location: outputs/{algorithm}_results.csv
+   - Columns: category, test, n, m, time, exitcode
+   - Generated by: run_p{1,2,3,4,5}_only.py scripts
+   
+2. Performance Metrics
+   - Location: performance_metrics.txt
+   - Format: Structured text with algorithm/test sections
+   - Contains: Memory usage, user/system time, exit codes
+   - Generated by: /usr/bin/time wrapper in run scripts
+   
+3. Cachegrind Output
+   - Location: cachegrind_p{1,2,4,5}.out
+   - Format: Valgrind cachegrind binary format
+   - Parsed by: cg_annotate tool
+   - Contains: Instruction counts, cache metrics, branch stats
+   
+4. Graph Dataset Files
+   - Location: dataset/{category}/{graph_name}.txt
+   - Format: Edge list (comments, vertex count, edge list)
+   - Categories: sparse, dense, small, large, tree_like, highly_connected, real_world
+
+
+PERFORMANCE CONSIDERATIONS
+---------------------------
+
+Rendering Optimizations:
+1. Adaptive detail: Reduce node size and labels for large graphs
+2. Degree distributions: Replace full rendering for n > 1000
+3. Spring layout iterations: Fewer iterations for large graphs (20 vs 50)
+4. Backend: 'Agg' backend avoids GUI overhead
+
+Memory Management:
+1. plt.close(): Always close figures after saving
+2. Batch processing: One category at a time
+3. Data filtering: Only successful runs loaded into memory
+
+File I/O:
+1. Read once: Cache graph structures when possible
+2. Stream parsing: Process large files line-by-line
+3. Error handling: Try-except blocks for corrupted data
+
+
+EXTENSIBILITY
+-------------
+
+Adding New Visualizations:
+1. Follow naming convention: create_{type}_graphs.py
+2. Use ALGO_NAMES and ALGO_COLORS dictionaries
+3. Save to GRAPHS_DIR with descriptive names
+4. Return success/failure status
+5. Print progress messages with ✓/✗ symbols
+
+Adding New Metrics:
+1. Parse from existing files or add to data collection
+2. Create corresponding visualization function
+3. Use consistent color scheme and formatting
+4. Document in this file
+
+Supporting New Algorithms:
+1. Add to ALGO_NAMES dictionary with descriptive name
+2. Add to ALGO_COLORS with unique color
+3. Ensure CSV output format matches existing
+4. Update all visualization scripts to include new algorithm
+
+
+SUMMARY
+-------
+
+Total Visualization Models: 6
+1. Graph structure visualization (topology + critical components)
+2. Performance comparison (bar charts, scatter plots)
+3. Memory usage analysis (bar charts with error bars)
+4. Cache performance (L1 misses, branch predictions)
+5. Degree distribution (histograms for large graphs)
+6. Articulation & bridge highlighting (overlays on graphs)
+
+Key Features:
+- Adaptive rendering based on graph size
+- Consistent color scheme across all charts
+- Statistical rigor (mean, std, filtering)
+- High-quality output (150 DPI PNG)
+- Professional formatting (grids, labels, legends)
+- Batch processing capabilities
+- Error handling and progress reporting
+
+Libraries: matplotlib, NetworkX, pandas, numpy
+Output: PNG images at 150 DPI
+Organization: Categorized in graphs/ directory
+
+NOTE: These visualization models provide comprehensive analysis capabilities
+for graph algorithms, enabling both qualitative (visual) and quantitative
+(statistical) assessment of algorithm performance and graph properties.
